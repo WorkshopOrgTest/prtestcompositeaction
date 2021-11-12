@@ -1,20 +1,50 @@
 name: 'Apicall action'
 description: 'To be used as a deployment gate'
 inputs:
-  Token:
-    description: 'GitHub API Token'
+  Base:
+    description: 'Base Branch where changes will be merged'
     required: true
-  Header: 
-    description: 'Header to be added along with the request'
-    required: true
-  RequestBody: 
-    description: 'Request Body for the api call'
-    required: true
-  ExpectedOutput:
-    description: 'Output to compare the api response with'
+  Head: 
+    description: 'Branch from where the changes will be merged'
     required: true
 outputs:
   comparisonoutput:
-    description: 'Script to fail/Pass based on the api call script'
+    description: 'PR to be updated based on conditions'
 runs:
   using: "composite"
+  steps:
+   - name: Comparing Branches
+        id: compare
+        if: ${{ github.head_ref == ${{inputs.Head}} && github.base_ref == ${{inputs.Base}} }}
+        run: echo ::set-output name=status::success
+        continue-on-error: true
+        
+      - name: Get Pull Request ID
+        run: |
+         export PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+         echo "pr_num=$PR_NUMBER" >> $GITHUB_ENV
+         
+
+      - name: Add Comment to Pull Request if Success
+        if: steps.compare.outputs.status == 'success'
+        uses: actions/github-script@v5
+        with:
+          script: |
+           await github.rest.issues.createComment({
+           owner: context.repo.owner, 
+           repo: context.repo.repo, 
+           issue_number: ${{ env.pr_num }},
+           body: 'Its Success'
+           });
+           
+      - name: Add Comment to Pull Request if Failure
+        if: steps.compare.outputs.status != 'success'
+        uses: actions/github-script@v5
+        with:
+          script: |
+           await github.rest.issues.createComment({
+           owner: context.repo.owner, 
+           repo: context.repo.repo, 
+           issue_number: ${{ env.pr_num }},
+           body: 'Its Failure'
+           });
