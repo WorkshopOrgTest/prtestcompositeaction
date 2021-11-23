@@ -1,5 +1,5 @@
-name: 'Apicall action'
-description: 'To be used as a deployment gate'
+name: 'PRTest action'
+description: 'To validate Correct PRs'
 inputs:
   Base:
     description: 'Base Branch where changes will be merged'
@@ -13,7 +13,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-   - name: Comparing Branches
+      - name: Comparing Branches
         id: compare
         if: ${{ github.head_ref == ${{inputs.Head}} && github.base_ref == ${{inputs.Base}} }}
         run: echo ::set-output name=status::success
