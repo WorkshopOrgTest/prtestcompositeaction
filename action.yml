@@ -48,3 +48,15 @@ runs:
            issue_number: ${{ env.pr_num }},
            body: 'Its Failure'
            });
+           
+      - name: Close PR 
+        if: steps.compare.outputs.status != 'success'
+        uses: actions/github-script@v5
+        with:
+          script: |
+             await github.rest.issues.update({
+             owner: context.repo.owner,
+             repo: context.repo.repo ,
+             issue_number: ${{ env.pr_num }},
+             state: closed
+          });  
