@@ -13,51 +13,54 @@ outputs:
 runs:
   using: "composite"
   steps:
-      - name: Comparing Branches
-        id: compare
-        if: ${{ github.head_ref == inputs.Head && github.base_ref == inputs.Base }}
-        run: echo ::set-output name=status::success
-        shell: bash
+    - name: Comparing Branches
+      id: compare
+      env:
+        Head: ${{inputs.Head}}
+        Base: ${{inputs.Base}}
+      if: ${{ github.head_ref == ${{env.Head}} && github.base_ref == $${{env.Base}} }}
+      run: echo ::set-output name=status::success
+      shell: bash
         
-      - name: Get Pull Request ID
-        run: |
-         export PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-         echo "pr_num=$PR_NUMBER" >> $GITHUB_ENV
-        shell: bash
+   - name: Get Pull Request ID
+     run: |
+      export PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+      echo "pr_num=$PR_NUMBER" >> $GITHUB_ENV
+      shell: bash
          
 
-      - name: Add Comment to Pull Request if Success
-        if: steps.compare.outputs.status == 'success'
-        uses: actions/github-script@v5
-        with:
-          script: |
-           await github.rest.issues.createComment({
-           owner: context.repo.owner, 
-           repo: context.repo.repo, 
-           issue_number: ${{ env.pr_num }},
-           body: 'Its Success'
-           });
+   - name: Add Comment to Pull Request if Success
+     if: steps.compare.outputs.status == 'success'
+     uses: actions/github-script@v5
+     with:
+       script: |
+          await github.rest.issues.createComment({
+          owner: context.repo.owner, 
+          repo: context.repo.repo, 
+          issue_number: ${{ env.pr_num }},
+          body: 'Its Success'
+          });
            
-      - name: Add Comment to Pull Request if Failure
-        if: steps.compare.outputs.status != 'success'
-        uses: actions/github-script@v5
-        with:
-          script: |
-           await github.rest.issues.createComment({
-           owner: context.repo.owner, 
-           repo: context.repo.repo, 
-           issue_number: ${{ env.pr_num }},
-           body: 'Its Failure'
-           });
+     - name: Add Comment to Pull Request if Failure
+       if: steps.compare.outputs.status != 'success'
+       uses: actions/github-script@v5
+       with:
+        script: |
+          await github.rest.issues.createComment({
+          owner: context.repo.owner, 
+          repo: context.repo.repo, 
+          issue_number: ${{ env.pr_num }},
+          body: 'Its Failure'
+          });
            
-      - name: Close PR 
-        if: steps.compare.outputs.status != 'success'
-        uses: actions/github-script@v5
-        with:
-          script: |
-             await github.rest.issues.update({
-             owner: context.repo.owner,
-             repo: context.repo.repo ,
-             issue_number: ${{ env.pr_num }},
-             state: closed
-          });  
+     - name: Close PR 
+       if: steps.compare.outputs.status != 'success'
+       uses: actions/github-script@v5
+       with:
+         script: |
+            await github.rest.issues.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo ,
+            issue_number: ${{ env.pr_num }},
+            state: closed
+         });  
