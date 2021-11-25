@@ -18,7 +18,7 @@ runs:
       env:
         Head: ${{inputs.Head}}
         Base: ${{inputs.Base}}
-      if: ${{ github.head_ref == ${{env.Head}} && github.base_ref == $${{env.Base}} }}
+      if: ${{ github.head_ref == env.Head && github.base_ref == env.Base }}
       run: echo ::set-output name=status::success
       shell: bash
         
