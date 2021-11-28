@@ -13,17 +13,17 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Comparing Branches
-      id: compare
-      env:
-        Head: ${{inputs.Head}}
-        Base: ${{inputs.Base}}
-      #if: ${{ github.head_ref == env.Head && github.base_ref == env.Base }}
-      run: |
-        if[ $github.head_ref == $Head && $github.base_ref == $Base]
-        then
-        echo ::set-output name=status::success
-      shell: bash
+   - name: Comparing Branches
+     id: compare
+     env:
+       Head: ${{inputs.Head}}
+       Base: ${{inputs.Base}}
+     #if: ${{ github.head_ref == env.Head && github.base_ref == env.Base }}
+     run: |
+       if[ $github.head_ref == $Head && $github.base_ref == $Base]
+       then
+       echo ::set-output name=status::success
+     shell: bash
         
    - name: Get Pull Request ID
      run: |
