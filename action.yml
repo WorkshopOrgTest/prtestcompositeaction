@@ -19,7 +19,10 @@ runs:
         Head: ${{inputs.Head}}
         Base: ${{inputs.Base}}
       if: ${{ github.head_ref == env.Head && github.base_ref == env.Base }}
-      run: echo ::set-output name=status::success
+      run: |
+        if[ $github.head_ref == $Head && $github.base_ref == $Base]
+        then
+        echo ::set-output name=status::success
       shell: bash
         
    - name: Get Pull Request ID
