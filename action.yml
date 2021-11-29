@@ -47,7 +47,7 @@ runs:
          owner: context.repo.owner, 
          repo: context.repo.repo, 
          issue_number: ${{ env.pr_num }},
-         body: 'PR Validation Failed, Please refer #34 to follow the correct rules for PR Creation'
+         body: 'PR Validation Failed, Please refer [here](https://github.com/WorkshopOrgTest/PartsTest/blob/master/branching.md) to follow the correct rules for PR Creation'
          });
            
    - name: Close PR 
