@@ -44,10 +44,10 @@ runs:
           body: 'Its Success'
           });
            
-    - name: Add Comment to Pull Request if Failure
-      if: steps.compare.outputs.status != 'success'
-      uses: actions/github-script@v5
-      with:
+   - name: Add Comment to Pull Request if Failure
+     if: steps.compare.outputs.status != 'success'
+     uses: actions/github-script@v5
+     with:
        script: |
          await github.rest.issues.createComment({
          owner: context.repo.owner, 
@@ -56,14 +56,13 @@ runs:
          body: 'Its Failure'
          });
            
-    - name: Close PR 
-      if: steps.compare.outputs.status != 'success'
-      uses: actions/github-script@v5
-      with:
+   - name: Close PR 
+     if: steps.compare.outputs.status != 'success'
+     uses: actions/github-script@v5
+     with:
         script: |
            await github.rest.issues.update({
            owner: context.repo.owner,
            repo: context.repo.repo ,
            issue_number: ${{ env.pr_num }},
-           state: closed
-        });  
+           state: closed });  
