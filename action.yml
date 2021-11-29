@@ -15,12 +15,7 @@ runs:
   steps:
    - name: Comparing Branches
      id: compare
-     env:
-       Head: ${{inputs.Head}}
-       Base: ${{inputs.Base}}
-   #    github.head_ref: ${{github.head_ref}}
-   #    github.base_ref: ${{github.base_ref}}
-     if: ${{ github.head_ref}} == ${{inputs.Head}} && ${{github.base_ref}} == ${{inputs.Base }}
+     if: ${{ github.head_ref == inputs.Head}} && ${{github.base_ref == inputs.Base }}
      run: echo ::set-output name=status::success
      shell: bash
         
