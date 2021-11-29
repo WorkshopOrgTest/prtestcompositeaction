@@ -47,7 +47,7 @@ runs:
          owner: context.repo.owner, 
          repo: context.repo.repo, 
          issue_number: ${{ env.pr_num }},
-         body: 'Its Failure'
+         body: 'Its Failure #34'
          });
            
    - name: Close PR 
