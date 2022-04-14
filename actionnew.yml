@@ -1,0 +1,15 @@
+name: 'PRTest action'
+description: 'To validate Correct PRs'
+inputs:
+  Base:
+    description: 'Base Branch where changes will be merged'
+    required: true
+  Head: 
+    description: 'Branch from where the changes will be merged'
+    required: true
+outputs:
+  comparisonoutput:
+    description: 'PR to be updated based on conditions'
+runs:
+  using: "docker"
+  image: "dockerfile"
